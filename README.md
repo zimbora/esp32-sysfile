@@ -68,7 +68,7 @@ SYSFILE(HardwareSerial* serial_port)
 
 ### Init
 * Init filesystem
-*
+
 * return true if filesystem has been correctly inited
 ```
 bool init(); // tested
@@ -76,7 +76,7 @@ bool init(); // tested
 
 ### Format
 * Formats filesystem
-*
+
 * return true if filesystem has been formatted
 ```
 bool format(); // tested
@@ -84,9 +84,9 @@ bool format(); // tested
 
 ### Create directory
 * Create all necessary folders until full path are completed
-*
+
 * @dir - directory to be created
-*
+
 * return true if folder exists or has been created
 ```
 bool create_dir(const char* dir); // tested
@@ -157,7 +157,7 @@ bool delete_file(const char * filename); // tested
 
 ### Count files
 * Count files and folders inside a directory
-*
+*  
 * @dir - path to directory
 * @levels - depth of folder to be analyzed
 *
