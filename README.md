@@ -59,7 +59,8 @@ SYSFILE()
 ```
 
 ### Constructor 2
-return true if has succeed
+
+* @serial_port - serial port for debug
 ```
 SYSFILE(HardwareSerial* serial_port)
 ```
