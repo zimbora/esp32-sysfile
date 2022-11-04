@@ -12,19 +12,33 @@ Folders cannot contain "." in the name and files are mandatory to contain "." in
 ## Public Methods
 
 [SYSFILE()](#Constructor-1)
+
 [SYSFILE(HardwareSerial* serial_port)](#Constructor-2)
+
 [bool init()](#Init)
+
 [bool format()](#Format)
+
 [bool create_dir(const char* dir)](#Create-directory)
+
 [int16_t delete_dir(const char* dir,int8_t level)](#Delete-directory)
+
 [void list_filesystem(uint8_t level)](#List-filesystem-1)
+
 [void list_filesystem(const char* dir, uint8_t level)](#List-filesystem-2)
+
 [bool write_file(const char* filename, const char* data, uint16_t len)](#Write-file)
+
 [bool read_file(const char * filename, char* data, uint16_t* len)](#Read-file)
+
 [String get_next_file(const char ](#Get-next-file)
+
 [bool delete_file(const char * filename)](#Delete-file)
+
 [int16_t countFiles(const char* dir, uint8_t levels=1)](#Count-files)
+
 [uint16_t iterateDir(const char * dirname, uint32_t timeout, bool(*callback)(String))](#Iterate-directory)
+
 [uint32_t get_lfs_available_space()](#Get-available-space)
 
 ## Examples
