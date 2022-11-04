@@ -156,6 +156,8 @@ bool delete_file(const char * filename); // tested
 ```
 
 ### Count files
+* Count files and folders inside a directory
+*
 * @dir - path to directory
 * @levels - depth of folder to be analyzed
 *
@@ -165,6 +167,8 @@ int16_t countFiles(const char* dir, uint8_t levels=1); // tested
 ```
 
 ### Iterate directory
+* Iterate files inside a folder and call callback function on each iteration
+*
 * @dir - path to directory
 * @timeout - available time to execute operation
 * @callback - function to be executed on each iteration
