@@ -5,22 +5,12 @@
 //#define CONFIG_LITTLEFS_SPIFFS_COMPAT 1
 #define FORMAT_LITTLEFS_IF_FAILED true
 
-//#define DEBUG_SYSFILE
 //#define HIGH_DEBUG_SYSFILE
+#define DEBUG_SYSFILE
 #define WARNING_DEBUG_SYSFILE
 
 #include <FS.h>
 #include <LITTLEFS.h>
-
-#define MAX_AR_FILE_SIZE 220
-
-// !! Maybe filename has to be equal or greater than 8 chars, bcs file /alarm without the "_" in the end doesn't work
-#define SETTINGS_FILE "/settings.txt" // settings
-#define RECORDS_PATH "/records"
-#define MQTT_RECORDS_PATH "/ee"
-#define CALIB_ENERGY_FILE "/calib.txt"
-#define PULSE_COUNTERS_PATH "/counters.txt"
-#define IT_TABLE_PATH "/it_table.txt"
 
 class SYSFILE{
   public:
@@ -114,7 +104,7 @@ class SYSFILE{
     */
     int16_t countFiles(const char* dir, uint8_t levels=1); // tested
     /*
-    * Iterate files inside a folder and call callback function on each iteration
+    * Iterate files inside a folder and call callback function on each file found
     *
     * @dir - path to directory
     * @timeout - available time to execute operation
@@ -123,6 +113,13 @@ class SYSFILE{
     * return number of iterations
     */
     uint16_t iterateDir(const char * dirname, uint32_t timeout, bool(*callback)(String)); // tested
+    /*
+    * Deletes all empty subdirectories inside folder
+    *
+    * @dir - path to directory
+    * @timeout - available time to execute operation
+    */
+    void deleteEmptySubDirectories(const char * dirname, uint32_t timeout); // tested
     /*
     * get available space on filesystem
     *

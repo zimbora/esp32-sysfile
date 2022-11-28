@@ -39,6 +39,8 @@ Folders cannot contain "." in the name and files are mandatory to contain "." in
 
 [uint16_t iterateDir(const char * dirname, uint32_t timeout, bool(*callback)(String))](#Iterate-directory)
 
+[void deleteEmptySubDirectories(const char * dirname, uint32_t timeout, bool(*callback)(String))](#Delete-empty-subdirectories)
+
 [uint32_t get_lfs_available_space()](#Get-available-space)
 
 ## Examples
@@ -64,7 +66,6 @@ SYSFILE()
 ```
 SYSFILE(HardwareSerial* serial_port)
 ```
-
 
 ### Init
 * Init filesystem
@@ -169,13 +170,22 @@ int16_t countFiles(const char* dir, uint8_t levels=1); // tested
 ### Iterate directory
 * Iterate files inside a folder and call callback function on each iteration
 *
-* @dir - path to directory
+* @dirname - path to directory
 * @timeout - available time to execute operation
 * @callback - function to be executed on each iteration
 *
 * return number of iterations
 ```
 uint16_t iterateDir(const char * dirname, uint32_t timeout, bool(*callback)(String)); // tested
+```
+
+### Delete empty subdirectories
+* Deletes all empty subdirectories inside folder
+*
+* @dirname - path to directory
+* @timeout - available time to execute operation
+```
+void deleteEmptySubDirectories(const char * dirname, uint32_t timeout, bool(*callback)(String))
 ```
 
 ### Get available space

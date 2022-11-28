@@ -340,6 +340,43 @@ uint16_t SYSFILE::iterateDir(const char * dirname, uint32_t timeout, bool(*callb
   return count;
 }
 
+void SYSFILE::deleteEmptySubDirectories(const char * dirname, uint32_t timeout){
+
+  //Serial.printf("Listing directory: %s\r\n", dirname);
+  uint16_t count = 0;
+  File root;
+	root = LITTLEFS.open(dirname);
+
+  if(!root){
+    Serial.println("- failed to open directory");
+    return count;
+  }
+  if(!root.isDirectory()){
+    Serial.println(" - not a directory");
+    return count;
+  }
+
+  File file = root.openNextFile();
+  while(file && timeout > millis()){
+    if(file.isDirectory()){
+      if(countFiles(file.name(),1) == 0){
+        if(!LITTLEFS.rmdir(file.name()))
+          Serial.printf("- failed to delete directory: %s \n",file.name());
+      }else{
+        deleteEmptySubDirectories(file.name(), timeout);
+        if(countFiles(file.name(),1) == 0){
+          if(!LITTLEFS.rmdir(file.name()))
+            Serial.printf("- failed to delete directory: %s \n",file.name());
+        }
+      }
+    }
+    file = root.openNextFile();
+  }
+  file.close();
+
+  return count;
+}
+
 uint32_t SYSFILE::get_lfs_available_space(){
   uint32_t available_space = (LITTLEFS.totalBytes() - LITTLEFS.usedBytes())/1000;
   return available_space;
