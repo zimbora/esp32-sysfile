@@ -6,7 +6,7 @@
 #define FORMAT_LITTLEFS_IF_FAILED true
 
 //#define HIGH_DEBUG_SYSFILE
-#define DEBUG_SYSFILE
+//#define DEBUG_SYSFILE
 #define WARNING_DEBUG_SYSFILE
 
 #include <FS.h>
