@@ -349,11 +349,11 @@ void SYSFILE::deleteEmptySubDirectories(const char * dirname, uint32_t timeout){
 
   if(!root){
     Serial.println("- failed to open directory");
-    return count;
+    return;
   }
   if(!root.isDirectory()){
     Serial.println(" - not a directory");
-    return count;
+    return;
   }
 
   File file = root.openNextFile();
@@ -374,7 +374,7 @@ void SYSFILE::deleteEmptySubDirectories(const char * dirname, uint32_t timeout){
   }
   file.close();
 
-  return count;
+  return;
 }
 
 uint32_t SYSFILE::get_lfs_available_space(){

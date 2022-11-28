@@ -64,6 +64,8 @@ void setup() {
   Serial.printf("LFS available space (kB): %d \n",sysfile.get_lfs_available_space());
 
   sysfile.list_filesystem(5);
+
+  sysfile.format();
 }
 
 uint8_t loop_counter = 1;
