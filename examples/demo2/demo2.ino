@@ -19,7 +19,7 @@ String directory[] = {
 };
 
 String files[] = {
-  //"/home/lucas/records/3/temp/profile.txt",
+  "/home/lucas/records/3/temp/profile.txt",
   "/home/guest/profile.txt",
   "/opt/config.txt"
 };
@@ -59,7 +59,8 @@ void setup() {
 
   sysfile.list_filesystem(5);
 
-  sysfile.deleteEmptySubDirectories("/home",2000);
+  //sysfile.deleteEmptySubDirectories("/home",2000);
+  sysfile.deleteEmptySubDirectories(LITTLEFS,"/home/lucas/records",2000);
 
   Serial.printf("LFS available space (kB): %d \n",sysfile.get_lfs_available_space());
 

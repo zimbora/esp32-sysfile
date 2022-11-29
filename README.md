@@ -72,7 +72,7 @@ SYSFILE(HardwareSerial* serial_port)
 *
 * return true if filesystem has been correctly inited
 ```
-bool init(); // tested
+bool init();
 ```
 
 ### Format
@@ -80,7 +80,7 @@ bool init(); // tested
 *
 * return true if filesystem has been formatted
 ```
-bool format(); // tested
+bool format();
 ```
 
 ### Create directory
@@ -90,26 +90,26 @@ bool format(); // tested
 *
 * return true if folder exists or has been created
 ```
-bool create_dir(const char* dir); // tested
+bool create_dir(const char* dir);
 ```
 
 ### Delete directory
-* directory is only deleted if no files or folders are in it's subfolders
-* increase level to delete it's subfolders
+* delete contained folders and files
+* increase level to delete its subfolders
 *
 * @dir - directory to be deleted
 * @level - depth of folder to be listed
 *
 * return number of files and folders deleted
 ```
-int16_t delete_dir(const char* dir,int8_t level); // tested
+int16_t delete_dir(const char* dir,int8_t level);
 ```
 
 ### List filesystem 1
 * @dir - directory to be listed
 * @level - depth of folder to be listed
 ```
-void list_filesystem(const char* dir, uint8_t level); // tested
+void list_filesystem(const char* dir, uint8_t level);
 ```
 
 ### List filesystem 2
@@ -117,7 +117,7 @@ void list_filesystem(const char* dir, uint8_t level); // tested
 *
 * @level - depth of folder to be listed
 ```
-void list_filesystem(uint8_t level); // tested
+void list_filesystem(uint8_t level);
 ```
 
 ### Write file
@@ -127,7 +127,7 @@ void list_filesystem(uint8_t level); // tested
 *
 * return true if file was written successfully
 ```
-bool write_file(const char* filename, const char* data, uint16_t len); // tested
+bool write_file(const char* filename, const char* data, uint16_t len);
 ```
 
 ### Read file
@@ -137,7 +137,7 @@ bool write_file(const char* filename, const char* data, uint16_t len); // tested
 *
 * return true if file was read successfully
 ```
-bool read_file(const char * filename, char* data, uint16_t* len); // tested
+bool read_file(const char * filename, char* data, uint16_t* len);
 ```
 
 ### Get next file
@@ -153,7 +153,7 @@ String get_next_file(const char * dirname);
 *
 * return result
 ```
-bool delete_file(const char * filename); // tested
+bool delete_file(const char * filename);
 ```
 
 ### Count files
@@ -164,7 +164,7 @@ bool delete_file(const char * filename); // tested
 *
 * return number of files and folders
 ```
-int16_t countFiles(const char* dir, uint8_t levels=1); // tested
+int16_t countFiles(const char* dir, uint8_t levels=1);
 ```
 
 ### Iterate directory
@@ -176,7 +176,7 @@ int16_t countFiles(const char* dir, uint8_t levels=1); // tested
 *
 * return number of iterations
 ```
-uint16_t iterateDir(const char * dirname, uint32_t timeout, bool(*callback)(String)); // tested
+uint16_t iterateDir(const char * dirname, uint32_t timeout, bool(*callback)(String));
 ```
 
 ### Delete empty subdirectories

@@ -340,39 +340,48 @@ uint16_t SYSFILE::iterateDir(const char * dirname, uint32_t timeout, bool(*callb
   return count;
 }
 
-void SYSFILE::deleteEmptySubDirectories(const char * dirname, uint32_t timeout){
+void SYSFILE::deleteEmptySubDirectories(fs::FS &fs, const char * dirname, uint32_t timeout){
 
-  //Serial.printf("Listing directory: %s\r\n", dirname);
   uint16_t count = 0;
-  File root;
-	root = LITTLEFS.open(dirname);
+
+  String path = String(dirname);
+  String subpath = "";
+  int8_t index = path.indexOf("/",1);
+  if(index != -1){
+    subpath = path.substring(0,index);
+    path = path.substring(index);
+  }else subpath = path;
+
+  subpath = String(dirname);
+  File root = fs.open(subpath.c_str()); // open main directory
 
   if(!root){
-    Serial.println("- failed to open directory");
+    Serial.println("- failed to open directory: "+String(dirname));
     return;
   }
   if(!root.isDirectory()){
-    Serial.println(" - not a directory");
+    Serial.println(" - not a directory: "+String(dirname));
     return;
   }
 
   File file = root.openNextFile();
-  while(file && timeout > millis()){
+  while(file){
     if(file.isDirectory()){
       if(countFiles(file.name(),1) == 0){
-        if(!LITTLEFS.rmdir(file.name()))
+        if(!fs.rmdir(file.name()))
           Serial.printf("- failed to delete directory: %s \n",file.name());
       }else{
-        deleteEmptySubDirectories(file.name(), timeout);
+        deleteEmptySubDirectories(fs, file.name(), timeout);
         if(countFiles(file.name(),1) == 0){
-          if(!LITTLEFS.rmdir(file.name()))
+          if(!fs.rmdir(file.name()))
             Serial.printf("- failed to delete directory: %s \n",file.name());
         }
       }
     }
     file = root.openNextFile();
   }
-  file.close();
+
+  root.close();
 
   return;
 }
@@ -450,6 +459,7 @@ void SYSFILE::listDir(fs::FS &fs, const char * dirname, uint8_t levels){
       }
       file = root.openNextFile();
     }
+    root.close();
 }
 
 bool SYSFILE::create_folder(const char* folder){
