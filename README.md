@@ -4,7 +4,11 @@
 package to create, list and delete folder and files. It uses LittleFS
 
 ## Dependencies
-	LittleFS Arduino library 3.0.5
+	- LittleFS Arduino library 3.0.5
+
+## Compilation and Test
+	- Compiled and tested with esp32 by Espressif Systems v3.0.7
+	- unitTest example used for tests
 
 ## Implementation
 The library will create a hierarchy of folders and files like unix filesystem.
