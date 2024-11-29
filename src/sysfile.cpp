@@ -4,9 +4,9 @@
 
 bool SYSFILE::init(){
 
-  if(!LITTLEFS.begin(FORMAT_LITTLEFS_IF_FAILED)){
+  if(!LittleFS.begin(FORMAT_LITTLEFS_IF_FAILED)){
     #ifdef DEBUG_SYSFILE
-      Serial.println("LITTLEFS Mount Failed");
+      Serial.println("LittleFS Mount Failed");
     #endif
     return false;
   }
@@ -15,7 +15,7 @@ bool SYSFILE::init(){
 
 bool SYSFILE::format(){
 
-  return LITTLEFS.format();
+  return LittleFS.format();
 }
 
 bool SYSFILE::create_dir(const char* dir){
@@ -68,13 +68,13 @@ int16_t SYSFILE::delete_dir(const char* dir, int8_t level){
   Serial.printf("deleting dir: %s \n",dir);
   #endif
 
-  if(!LITTLEFS.rmdir(dir)){
+  if(!LittleFS.rmdir(dir)){
     //Serial.printf("- failed to delete directory: %s \n",dir);
 
     if(level == 0)
     return counter;
 
-    File root = LITTLEFS.open(dir);
+    File root = LittleFS.open(dir);
 
     if(!root){
       #ifdef DEBUG_SYSFILE
@@ -94,13 +94,13 @@ int16_t SYSFILE::delete_dir(const char* dir, int8_t level){
     File file = root.openNextFile();
     while(file){
       if(!file.isDirectory()){
-        String filename = String(file.name());
+        String filename = file.path();
         file.close(); // close file before try to delete
         if(delete_file(filename.c_str())){
           counter++;
         }
       }else{
-        counter += delete_dir(file.name(),level - 1);
+        counter += delete_dir(file.path(),level - 1);
       }
       file = root.openNextFile();
     }
@@ -126,7 +126,7 @@ bool SYSFILE::write_file(const char* filename, const char* data, uint16_t length
     return res;
   }
 
-  if(LITTLEFS.usedBytes() + length >= LITTLEFS.totalBytes()){
+  if(LittleFS.usedBytes() + length >= LittleFS.totalBytes()){
     #ifdef DEBUG_SYSFILE
     Serial.println("Filesystem went out of capacity");
     #endif
@@ -138,11 +138,11 @@ bool SYSFILE::write_file(const char* filename, const char* data, uint16_t length
   #endif
 
   /*
-  if (LITTLEFS.exists(filename))
-    LITTLEFS.remove(filename);
+  if (LittleFS.exists(filename))
+    LittleFS.remove(filename);
   */
 
-  file = LITTLEFS.open(filename, "w+");
+  file = LittleFS.open(filename, FILE_WRITE);
 
   if (!file){
     #ifdef DEBUG_SYSFILE
@@ -175,16 +175,16 @@ bool SYSFILE::write_file(const char* filename, const char* data, uint16_t length
 }
 
 bool SYSFILE::read_file(const char * filename, char* data, uint16_t* len){
-	//Serial.println("reading directory: " + String(filename));
+  //Serial.println("reading directory: " + String(filename));
 
   File file;
 
-  if (!LITTLEFS.exists(filename))
+  if (!LittleFS.exists(filename))
     return false;
 
-	file = LITTLEFS.open(filename);
+  file = LittleFS.open(filename);
 
-	if(file.isDirectory()){
+  if(file.isDirectory()){
     file.close();
     return false;
   }
@@ -194,14 +194,14 @@ bool SYSFILE::read_file(const char * filename, char* data, uint16_t* len){
     return false;
   }
 
-	for (uint16_t i = 0; i < file.size(); i++) {
-		data[i] = file.read();
-	}
+  for (uint16_t i = 0; i < file.size(); i++) {
+    data[i] = file.read();
+  }
 
-	*len = file.size();
+  *len = file.size();
 
   file.close();
-	return true;
+  return true;
 }
 
 bool SYSFILE::delete_file(const char * filename){
@@ -220,8 +220,8 @@ bool SYSFILE::delete_file(const char * filename){
   Serial.printf("deleting file: %s \n",filename);
   #endif
 
-  if (LITTLEFS.exists(filename)){
-    res = LITTLEFS.remove(filename);
+  if (LittleFS.exists(filename)){
+    res = LittleFS.remove(filename);
   }
 
   return res;
@@ -229,12 +229,12 @@ bool SYSFILE::delete_file(const char * filename){
 
 void SYSFILE::list_filesystem(uint8_t level){
 
-  listDir(LITTLEFS,"/",level);
+  listDir(LittleFS,"/",level);
 }
 
 void SYSFILE::list_filesystem(const char* dir, uint8_t level){
 
-  listDir(LITTLEFS,dir,level);
+  listDir(LittleFS,dir,level);
 }
 
 int16_t SYSFILE::countFiles(const char* dirname, uint8_t levels){
@@ -244,14 +244,14 @@ int16_t SYSFILE::countFiles(const char* dirname, uint8_t levels){
   if(levels==0)
     return count;
 
-  if(!LITTLEFS.exists(dirname)){
+  if(!LittleFS.exists(dirname)){
     #ifdef DEBUG_SYSFILE
       Serial.printf("[listDir] - path %s doesn't exist \n",dirname);
     #endif
     return count;
   }
 
-  File root = LITTLEFS.open(dirname);
+  File root = LittleFS.open(dirname);
   if(!root){
     #ifdef HIGH_DEBUG_SYSFILE
     Serial.println("- Invalid path");
@@ -273,7 +273,7 @@ int16_t SYSFILE::countFiles(const char* dirname, uint8_t levels){
     count++;
     if(file.isDirectory()){
       if(levels){
-          count += countFiles(file.name(), levels - 1);
+          count += countFiles(file.path(), levels - 1);
       }
     }
     file = root.openNextFile();
@@ -285,7 +285,7 @@ String SYSFILE::get_next_file(const char * dirname){
 
   //Serial.printf("Listing directory: %s\r\n", dirname);
   String filename = "";
-	File root = LITTLEFS.open(dirname);
+  File root = LittleFS.open(dirname);
 
   if(!root){
     Serial.println("- failed to open directory");
@@ -313,7 +313,7 @@ uint16_t SYSFILE::iterateDir(const char * dirname, uint32_t timeout, bool(*callb
   //Serial.printf("Listing directory: %s\r\n", dirname);
   uint16_t count = 0;
   File root;
-	root = LITTLEFS.open(dirname);
+  root = LittleFS.open(dirname);
 
   if(!root){
     Serial.println("- failed to open directory");
@@ -387,7 +387,7 @@ void SYSFILE::deleteEmptySubDirectories(fs::FS &fs, const char * dirname, uint32
 }
 
 uint32_t SYSFILE::get_lfs_available_space(){
-  uint32_t available_space = (LITTLEFS.totalBytes() - LITTLEFS.usedBytes())/1000;
+  uint32_t available_space = (LittleFS.totalBytes() - LittleFS.usedBytes())/1000;
   return available_space;
 }
 
@@ -397,7 +397,7 @@ int16_t SYSFILE::check_dir(const char * dirname){
   int16_t counter = 0;
   File root;
 
-  root = LITTLEFS.open(dirname);
+  root = LittleFS.open(dirname);
   if(!root){
     return counter;
   }
@@ -449,7 +449,7 @@ void SYSFILE::listDir(fs::FS &fs, const char * dirname, uint8_t levels){
         Serial.print("[listDir]  DIR : ");
         Serial.println(file.name());
         if(levels){
-            listDir(fs, file.name(), levels -1);
+            listDir(fs, file.path(), levels -1);
         }
       } else {
         Serial.print("[listDir]  FILE: ");
@@ -471,7 +471,7 @@ bool SYSFILE::create_folder(const char* folder){
     #ifdef HIGH_DEBUG_SYSFILE
       Serial.printf("creating folder: %s \n",folder);
     #endif
-    if(LITTLEFS.mkdir(folder)){
+    if(LittleFS.mkdir(folder)){
       #ifdef HIGH_DEBUG_SYSFILE
         Serial.println("folder created");
       #endif

@@ -10,7 +10,7 @@
 #define WARNING_DEBUG_SYSFILE
 
 #include <FS.h>
-#include <LITTLEFS.h>
+#include <LittleFS.h>
 
 class SYSFILE{
   public:

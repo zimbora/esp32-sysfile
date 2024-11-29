@@ -1,7 +1,10 @@
 # esp32-sysfile
 
 ## Description
-package to create, list and delete folder and files. It uses LITTLEFS
+package to create, list and delete folder and files. It uses LittleFS
+
+## Dependencies
+	LittleFS Arduino library 3.0.5
 
 ## Implementation
 The library will create a hierarchy of folders and files like unix filesystem.
