@@ -1,5 +1,5 @@
-
 #include "sysfile.hpp"
+#include "string.h"
 
 
 bool SYSFILE::init(){
